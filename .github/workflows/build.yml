@@ -95,4 +95,4 @@ jobs:
           cwd: infra
           add: ${{ steps.env.outputs.path }}/kustomization.yaml
           message: "Update images to ${{ github.sha }}"
-          push: origin main
+          push: origin HEAD:main
