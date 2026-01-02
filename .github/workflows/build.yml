@@ -89,15 +89,20 @@ jobs:
           kustomize edit set image image-read-image=ramanan98/image-read:$GITHUB_SHA
           kustomize edit set image broadcaster-image=ramanan98/broadcaster:$GITHUB_SHA
 
-      - name: Rebase infra repo on latest main
-        run: |
-          cd infra
-          git pull --rebase origin main
-
-      - name: Commit and push to infra repo
+      - name: Commit changes locally
         uses: EndBug/add-and-commit@v9
         with:
           cwd: infra
           add: ${{ steps.env.outputs.path }}/kustomization.yaml
           message: "Update images to ${{ github.sha }}"
-          push: origin main
+          push: false
+
+      - name: Pull latest main from infra
+        run: |
+          cd infra
+          git pull --rebase origin main || true
+
+      - name: Push to infra repo
+        run: |
+          cd infra
+          git push origin main
